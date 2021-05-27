@@ -1,0 +1,49 @@
+﻿@model IdentServer.ViewModels.RegisterViewModel
+
+@{
+    ViewData["Title"] = "Register";
+}
+
+<h1>Register</h1>
+
+<h4>RegisterViewModel</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Register">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="UserName" class="control-label"></label>
+                <input asp-for="UserName" class="form-control" />
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password" class="control-label"></label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ConfirPassword" class="control-label"></label>
+                <input asp-for="ConfirPassword" class="form-control" />
+                <span asp-validation-for="ConfirPassword" class="text-danger"></span>
+            </div>
+            <div class="form-group" hidden>
+                <label asp-for="ReturnUrl" class="control-label"></label>
+                <input asp-for="ReturnUrl" class="form-control" type="hidden" />
+                <span asp-validation-for="ReturnUrl" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="SignUp" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div>
+    <a asp-controller="Auth" asp-action="Login" asp-route-returnUrl="@Model.ReturnUrl">Back to Login</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
