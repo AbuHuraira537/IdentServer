@@ -46,12 +46,7 @@ namespace IdentServer
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.ConfigureApplicationCookie(config =>
-            {
-                config.Cookie.Name = "IdentityServer.Cookie";
-                config.LoginPath = "/Auth/Login";
-                config.LogoutPath = "/Auth/Logout";
-            });
+
 
 
             services.AddIdentityServer()
@@ -59,7 +54,28 @@ namespace IdentServer
                 .AddAspNetIdentity<IdentityUser>()
                 .AddInMemoryIdentityResources(Configurations.GetIdentityResources())
                 .AddInMemoryClients(Configurations.GetClients())
+                .AddInMemoryApiScopes(Configurations.GetApiScopes())
                 .AddDeveloperSigningCredential();
+
+            services.ConfigureApplicationCookie(config =>
+            {
+                config.Cookie.Name = "IdentityServer.Cookie";
+                config.Cookie.HttpOnly = true;
+                config.LoginPath = "/Auth/Login";
+                config.LogoutPath = "/Auth/Logout";
+            });
+            services.AddCors(options =>
+            {
+                options.AddPolicy("allowed", policy =>
+                {
+                    policy.AllowAnyMethod();
+                    policy.AllowAnyOrigin();
+                    policy.AllowAnyHeader();
+                    policy.AllowAnyOrigin();
+                    
+                    
+                });
+            });
             services.AddControllersWithViews();
         }
 
@@ -80,7 +96,9 @@ namespace IdentServer
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseCors("allowed");
             app.UseIdentityServer();
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

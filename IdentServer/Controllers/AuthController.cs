@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using IdentityServer4.Services;
 using IdentServer.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,15 +13,29 @@ namespace IdentServer.Controllers
     {
         private readonly UserManager<IdentityUser> userManager;
         private readonly SignInManager<IdentityUser> signInManager;
+        private readonly IIdentityServerInteractionService service;
 
-        public AuthController(UserManager<IdentityUser> userManager,SignInManager<IdentityUser> signInManager)
+        public AuthController(UserManager<IdentityUser> userManager,SignInManager<IdentityUser> signInManager,IIdentityServerInteractionService service)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
+            this.service = service;
         }
         public IActionResult Index()
         {
             return View();
+        }
+        
+            [HttpGet]
+        public async Task<IActionResult> Logout(string logoutId)
+        {
+            await signInManager.SignOutAsync();
+            var logoutRequest =  await service.GetLogoutContextAsync(logoutId);
+            if (string.IsNullOrEmpty(logoutRequest.PostLogoutRedirectUri))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            return View(logoutRequest.PostLogoutRedirectUri);
         }
         [HttpGet]
         public  IActionResult Login(string returnUrl)

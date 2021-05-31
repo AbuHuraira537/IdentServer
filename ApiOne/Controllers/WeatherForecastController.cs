@@ -25,11 +25,17 @@ namespace ApiOne.Controllers
         }
 
         [HttpGet]
-        [Route("/secret")]
         [Authorize]
-        public string index()
+        public string secret()
         {
+            var claims = User.Claims.ToList();
             return "hello world";
+        }
+        [HttpGet]
+        public string hello()
+        {
+           var claims =  User.Claims.ToList();
+            return "hello";
         }
     }
 }
