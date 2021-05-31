@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -21,6 +22,8 @@ namespace IdentServer
                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
                 var user = new IdentityUser("huraira");
                userManager.CreateAsync(user, "password").GetAwaiter().GetResult();
+                userManager.AddClaimAsync(user, new Claim("my.claim", "allowed")).GetAwaiter().GetResult();
+                userManager.AddClaimAsync(user, new Claim("my.claim1", "allowed1")).GetAwaiter().GetResult();
             }
             host.Run();
         }

@@ -34,7 +34,7 @@ namespace ApiClient.Controllers
             });
             var apiClient = factory.CreateClient();
             apiClient.SetBearerToken(tokenResponce.AccessToken);
-            var responce =await apiClient.GetAsync("https://localhost:44365/secret");
+            var responce =await apiClient.GetAsync("https://localhost:44365/WeatherForecast/secret");
             var content =await responce.Content.ReadAsStringAsync();
             
 
